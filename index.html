@@ -14,8 +14,9 @@
       background: linear-gradient(0deg, #e0ecff, #6B8E23);
     }
    .ligne {
-      display: flex;
-      gap: 10px;
+     display: flex;
+  gap: 10px;
+  justify-content: center;
     }
 
     .box {
@@ -54,10 +55,9 @@
 }
 
 .game {
-  height: 100px;
+  margin-top: 150px; /* espace vertical demandé */
+  height: 50px;
   background: linear-gradient(135deg, #6B8E23, #556B2F);
-	 top: -100;
-  right: -700;;
   color: white;
   display: flex;
   justify-content: center;
@@ -83,10 +83,12 @@
     <div class="ligne">
    <a href="#" class="box" >Menu</a>
    <a href="#" class="box" >score</a>
-   <a href="#" class="account" >Mon compte</a> 
+	</div>
+	  <div class="ligne game"
     <a href="#" class="game" >Partie 1</a>
    <a href="#" class="game" >Partie 2</a>
     </div>
+	  <a href="#" class="account" >Mon compte</a> 
   </nav>
 </header>
 </body>
