@@ -46,6 +46,29 @@
   color: white;
   font-weight: bold;
 }
+	.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.game {
+  height: 150px;
+  background: linear-gradient(135deg, #6B8E23, #556B2F);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 14px;
+  transition: all 0.35s ease;
+  cursor: pointer;
+}
+
+.game:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+}
 
 </style>
 </head>
@@ -58,7 +81,7 @@
     <div class="ligne">
    <a href="#" class="box" >Menu</a>
    <a href="#" class="box" >score</a>
-   <a href="#" class="account" >Mon compte</a>
+   <a href="#" class="account" >Mon compte</a> <br><br>
     <a href="#" class="game" >Partie 1</a>
    <a href="#" class="game" >Partie 2</a>
     </div>
