@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+	 body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+     
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(0deg, #e0ecff, #6B8E23);
+    }
+   .ligne {
+     display: flex;
+  gap: 10px;
+  justify-content: center;
+    }
+
+    .box {
+      text-align: height;
+      background: blueviolet;
+      padding: 50px;
+      border-radius: 23px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 150px;
+          flex: 1;
+      background: #cfe8d5;
+      padding: 20px;
+      border: 1px solid #999;
+        scroll-behavior: smooth;
+		 transition: all 0.35s ease;
+  cursor: pointer;
+    }
+	.box:hover{
+ transform: translateY(-8px);
+  box-shadow: 0 55px 155px rgba(0,0,0,0.2);
+	}
+	.account {
+  width: 100px;
+  height: 100px;
+  background: blue ;
+  border-radius: 50%;
+
+  display: flex;
+  position: fixed;
+  top: 0;
+  right: 0;;
+  align-items: center;
+
+  color: white;
+  font-weight: bold;
+}
+	.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.game {
+  margin-top: 150px; /* espace vertical demandé */
+  height: 50px;
+  background: linear-gradient(135deg, #6B8E23, #556B2F);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 14px;
+  transition: all 0.35s ease;
+  cursor: pointer;
+}
+
+.game:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+}
+
+</style>
+</head>
+  <body>
+  <class >
+
+
+  <header class="header">
+  <nav class="navbar">
+    <div class="ligne">
+   <a href="#" class="box" >Menu</a>
+   <a href="#" class="box" >score</a>
+	</div>
+	  <div class="ligne game">
+    <a href="Sondage.html" class="game" >Partie 1</a>
+   <a href="#" class="game" >Partie 2</a>
+    </div>
+	  <a href="#" class="account" >Mon compte</a> 
+  </nav>
+</header>
+</body>
