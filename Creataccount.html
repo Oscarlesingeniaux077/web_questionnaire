@@ -5,10 +5,20 @@
   <title>Créer un compte</title>
   <style>
     body {
-      font-family: Arial;
-      background: #eef;
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
       text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
       margin-top: 50px;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 30px;
     }
 
     input {
@@ -16,42 +26,83 @@
       margin: 10px auto;
       padding: 10px;
       width: 250px;
+      font-size: 16px;
     }
 
     button {
       padding: 10px 20px;
       cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    p {
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
 
-  <h1>Créer un compte</h1>
+  <div class="container">
+    <h1>Créer un compte</h1>
 
-  <input type="text" placeholder="Nom" id="nom">
-  <input type="text" placeholder="Prénom" id="prenom">
-  <input type="number" placeholder="Âge" id="age">
-  <input type="email" placeholder="Adresse mail" id="email">
-  <input type="password" placeholder="Mot de passe" id="password">
+    <input type="text" id="nom" placeholder="Nom">
+    <input type="text" id="prenom" placeholder="Prénom">
+    <input type="number" id="age" placeholder="Âge">
+    <input type="email" id="email" placeholder="Adresse mail">
+    <input type="password" id="password" placeholder="Mot de passe">
 
-  <button onclick="creerCompte()">Valider</button>
+    <button onclick="creerCompte()">Valider</button>
 
-  <p id="message"></p>
+    <p id="message"></p>
+  </div>
 
   <script>
     function creerCompte() {
-      const nom = document.getElementById("nom").value;
-      const prenom = document.getElementById("prenom").value;
-      const age = document.getElementById("age").value;
-      const email = document.getElementById("email").value;
+      const nom = document.getElementById("nom").value.trim();
+      const prenom = document.getElementById("prenom").value.trim();
+      const age = document.getElementById("age").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const message = document.getElementById("message");
 
-      document.getElementById("message").textContent =
-        "Compte créé pour " + prenom + " " + nom;
+      message.textContent = "";
+      message.style.color = "red";
 
-      // Redirection après création
-      setTimeout(() => {
+      if (nom === "" || prenom === "" || age === "" || email === "" || password === "") {
+        message.textContent = "Veuillez remplir tous les champs.";
+        return;
+      }
+
+      let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+
+      const compteExiste = comptes.some(function(compte) {
+        return compte.email === email;
+      });
+
+      if (compteExiste) {
+        message.textContent = "Cette adresse mail existe déjà.";
+        return;
+      }
+
+      const nouveauCompte = {
+        nom: nom,
+        prenom: prenom,
+        age: age,
+        email: email,
+        password: password
+      };
+
+      comptes.push(nouveauCompte);
+
+      localStorage.setItem("comptes", JSON.stringify(comptes));
+
+      message.style.color = "green";
+      message.textContent = "Compte créé avec succès.";
+
+      setTimeout(function() {
         window.location.href = "index.html";
-      }, 2000);
+      }, 1000);
     }
   </script>
 
