@@ -1,1 +1,25 @@
+<DOCTYPE html>
+  <<!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Page1</title>
+  </head>
+  <body>
 
+
+
+<script>
+  const pages = ["P2_Page2.html", "P2_Page3.html", "P2_Page4.html"];
+  let index = 0;
+
+  function changerPage() {
+    index = (index + 1) % pages.length;
+    window.location.href = pages[index];
+  }
+
+  setTimeout(changerPage, 40000); // change toutes les 40 secondes
+</script>
+</body>
+</html>
