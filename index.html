@@ -40,33 +40,49 @@
 
   <p id="error" style="color:red;"></p>
 
-  <script>
-    function login() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      const error = document.getElementById("error");
+ <script>
+  function login() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const error = document.getElementById("error");
 
-      // Admin fixe
-      if (username === "admin077@gmail.com" && password === "admin123426") {
-        window.location.href = "accueiladmin.html";
-        return;
-      }
+    error.textContent = "";
 
-      // Récupération des comptes enregistrés
-      const comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+    // Compte administrateur fixe
+    if (username === "admin077@gmail.com" && password === "admin123426") {
+      localStorage.setItem("utilisateurConnecte", JSON.stringify({
+        nom: "Admin",
+        prenom: "",
+        email: username,
+        role: "admin"
+      }));
 
-      // Recherche du compte
-      const utilisateur = comptes.find(
-        user => user.email === username && user.password === password
-      );
-
-      if (utilisateur) {
-        window.location.href = "Menu.html";
-      } else {
-        error.textContent = "Identifiants incorrects";
-      }
+      window.location.href = "accueiladmin.html";
+      return;
     }
-  </script>
+
+    // Comptes créés
+    const comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+
+    const utilisateurTrouve = comptes.find(function(compte) {
+      return compte.email === username && compte.password === password;
+    });
+
+    if (utilisateurTrouve) {
+      localStorage.setItem("utilisateurConnecte", JSON.stringify({
+        nom: utilisateurTrouve.nom,
+        prenom: utilisateurTrouve.prenom,
+        age: utilisateurTrouve.age,
+        email: utilisateurTrouve.email,
+        role: "client"
+      }));
+
+      window.location.href = "Menu.html";
+    } else {
+      error.textContent = "Identifiants incorrects";
+    }
+  }
+</script>
 
 </body>
 </html>
