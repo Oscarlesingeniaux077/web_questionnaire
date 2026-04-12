@@ -7,23 +7,58 @@
     <title>Page1</title>
   </head>
   <body>
-<p>
-  <span class="fraction">
-    <span class="top">4</span>
-    <span class="bottom">49</span>
-  </span>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 50px auto;
+      padding: 20px;
+    }
 
-  <span class="operation">×</span>
+    h1 {
+      margin-bottom: 20px;
+    }
 
-  <span class="fraction">
-    <span class="top">7</span>
-    <span class="bottom">18</span>
-  </span>
-</p>
+    .question {
+      margin-bottom: 20px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
 
-    <textarea rows="30" cols="20" placeholder="justification"></textarea>
-<style>
-  .fraction {
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .message {
+      margin-top: 20px;
+      color: green;
+      font-weight: bold;
+    }
+     .fraction {
   display: inline-block;
   text-align: center;
 }
@@ -36,9 +71,62 @@
 .fraction .bottom {
   display: block;
 }
-</style>
+  </style>
+</head>
+<body>
 
-<script>
+  <h1>Page 1</h1>
+
+  <div class="question">
+    <label for="reponse"> 
+  <span class="fraction">
+    <span class="top">4</span>
+    <span class="bottom">49</span>
+  </span>
+
+  <span class="operation">×</span>
+
+  <span class="fraction">
+    <span class="top">7</span>
+    <span class="bottom">18</span>
+  </span>
+</label>
+    <input type="text" id="reponse" />
+  </div>
+
+  <button onclick="enregistrerReponse()">Enregistrer</button>
+  <button onclick="chargerReponse()">Recharger la réponse</button>
+
+  <p id="message" class="message"></p>
+
+  <script>
+    const pageId = "page1";
+
+    function enregistrerReponse() {
+      const reponse = document.getElementById("reponse").value.trim();
+
+      localStorage.setItem(pageId, JSON.stringify({
+        reponse: reponse
+      }));
+
+      document.getElementById("message").textContent = "Réponse enregistrée.";
+    }
+
+    function chargerReponse() {
+      const donnees = localStorage.getItem(pageId);
+
+      if (!donnees) {
+        document.getElementById("message").textContent = "Aucune réponse enregistrée.";
+        return;
+      }
+
+      const objet = JSON.parse(donnees);
+      document.getElementById("reponse").value = objet.reponse || "";
+      document.getElementById("message").textContent = "Réponse rechargée.";
+    }
+
+    window.onload = chargerReponse;
+  
   const pages = ["P2_Page2.html", "P2_Page3.html", "P2_Page4.html"];
   let index = 0;
 
