@@ -3,98 +3,191 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<style>
-	 body {
+  <title>Menu utilisateur</title>
+
+  <style>
+    body {
       margin: 0;
-      height: 100vh;
-      display: flex;
-     
-      justify-content: center;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
       background: linear-gradient(0deg, #e0ecff, #6B8E23);
     }
-   .ligne {
-     display: flex;
-  gap: 10px;
-  justify-content: center;
+
+    .header {
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .welcome {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      margin-top: 30px;
+      margin-bottom: 30px;
+      color: #1f1f1f;
+    }
+
+    .ligne {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
     }
 
     .box {
-      text-align: height;
-      background: blueviolet;
-      padding: 50px;
+      text-decoration: none;
+      text-align: center;
       border-radius: 23px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      width: 150px;
-          flex: 1;
+      width: 180px;
       background: #cfe8d5;
       padding: 20px;
       border: 1px solid #999;
-        scroll-behavior: smooth;
-		 transition: all 0.35s ease;
-  cursor: pointer;
+      transition: all 0.35s ease;
+      cursor: pointer;
+      color: black;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 70px;
     }
-	.box:hover{
- transform: translateY(-8px);
-  box-shadow: 0 55px 155px rgba(0,0,0,0.2);
-	}
-	.account {
-  width: 100px;
-  height: 100px;
-  background: blue ;
-  border-radius: 50%;
 
-  display: flex;
-  position: fixed;
-  top: 0;
-  right: 0;;
-  align-items: center;
+    .box:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
 
-  color: white;
-  font-weight: bold;
-}
-	.grille {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
+    .account {
+      width: 120px;
+      height: 120px;
+      background: blue;
+      border-radius: 50%;
+      display: flex;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      padding: 10px;
+      box-sizing: border-box;
+    }
 
-.game {
-  margin-top: 150px; /* espace vertical demandé */
-  height: 50px;
-  background: linear-gradient(135deg, #6B8E23, #556B2F);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 14px;
-  transition: all 0.35s ease;
-  cursor: pointer;
-}
+    .grille {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
 
-.game:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-}
+    .game {
+      min-height: 80px;
+      background: linear-gradient(135deg, #6B8E23, #556B2F);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 14px;
+      transition: all 0.35s ease;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px;
+      text-align: center;
+    }
 
-</style>
+    .game:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    }
+
+    .info-user {
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 25px;
+      color: #222;
+    }
+
+    .logout-container {
+      text-align: center;
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+
+    .logout-btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: #c62828;
+      color: white;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background-color: #8e1d1d;
+    }
+  </style>
 </head>
-  <body>
-  <class >
 
-
+<body>
   <header class="header">
-  <nav class="navbar">
-    <div class="ligne">
-   <a href="#" class="box" >Menu</a>
-   <a href="#" class="box" >score</a>
-	</div>
-	  <div class="ligne game">
-    <a href="Sondage.html" class="game" >Partie 1</a>
-   <a href="#" class="game" >Partie 2</a>
-    </div>
-	  <a href="MonProfil.html" class="account" >Mon compte</a> 
-  </nav>
-</header>
+    <nav class="navbar">
+      <div class="welcome" id="titreBienvenue">Bienvenue</div>
+
+      <div class="info-user" id="infoUtilisateur"></div>
+
+      <div class="ligne">
+        <a href="#" class="box">Menu</a>
+        <a href="#" class="box">Score</a>
+      </div>
+
+      <div class="grille">
+        <a href="Sondage.html" class="game">Partie 1</a>
+        <a href="#" class="game">Partie 2</a>
+      </div>
+
+      <a href="MonProfil.html" class="account" id="monCompte">Mon compte</a>
+
+      <div class="logout-container">
+        <button class="logout-btn" onclick="deconnexion()">Déconnexion</button>
+      </div>
+    </nav>
+  </header>
+
+  <script>
+    const utilisateurConnecte = JSON.parse(localStorage.getItem("utilisateurConnecte"));
+
+    if (!utilisateurConnecte) {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("titreBienvenue").textContent =
+        "Bienvenue " + utilisateurConnecte.prenom + " " + utilisateurConnecte.nom;
+
+      document.getElementById("infoUtilisateur").textContent =
+        "Adresse mail : " + utilisateurConnecte.email;
+
+      document.getElementById("monCompte").textContent =
+        utilisateurConnecte.prenom || "Mon compte";
+    }
+
+    function deconnexion() {
+      localStorage.removeItem("utilisateurConnecte");
+      window.location.href = "index.html";
+    }
+  </script>
 </body>
+</html>
