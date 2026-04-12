@@ -1,0 +1,178 @@
+
+  <!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Correction de toutes les pages</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    .bloc-page {
+      margin-bottom: 20px;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+
+    .question {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .reponse-utilisateur {
+      margin: 8px 0;
+    }
+
+    .bonne-reponse {
+      margin: 8px 0;
+      color: #0044cc;
+    }
+
+    .correct {
+      color: green;
+      font-weight: bold;
+    }
+
+    .incorrect {
+      color: red;
+      font-weight: bold;
+    }
+
+    .score {
+      margin-top: 30px;
+      padding: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      background: #eef5ff;
+      border: 1px solid #aac8ff;
+      border-radius: 8px;
+    }
+
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Correction de toutes les pages</h1>
+
+  <button onclick="corrigerToutesLesPages()">Afficher la correction</button>
+  <button onclick="viderToutesLesReponses()">Supprimer toutes les réponses</button>
+
+  <div id="resultat"></div>
+
+  <script>
+    const corrige = {
+      page1: {
+        question: "<span class="fraction">
+    <span class="top">4</span>
+    <span class="bottom">49</span>
+  </span>
+
+  <span class="operation">×</span>
+
+  <span class="fraction">
+    <span class="top">7</span>
+    <span class="bottom">18</span>
+  </span>",
+        reponse: "<span class="fraction">
+    <span class="top">0</span>
+    <span class="bottom">0</span>
+  </span>"
+      },
+      page2: {
+        question: "Combien font 2 + 2 ?",
+        reponse: "4"
+      },
+      page3: {
+        question: "Explique ce qu'est une fraction.",
+        reponse: "Une fraction représente une ou plusieurs parts d'un tout."
+      }
+    };
+
+    function normaliserTexte(texte) {
+      return texte
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ");
+    }
+
+    function comparerReponses(reponseUtilisateur, bonneReponse) {
+      return normaliserTexte(reponseUtilisateur) === normaliserTexte(bonneReponse);
+    }
+
+    function corrigerToutesLesPages() {
+      const zoneResultat = document.getElementById("resultat");
+      zoneResultat.innerHTML = "";
+
+      let totalQuestions = 0;
+      let totalBonnes = 0;
+
+      for (const pageId in corrige) {
+        totalQuestions++;
+
+        const donnees = localStorage.getItem(pageId);
+        const objetUtilisateur = donnees ? JSON.parse(donnees) : null;
+
+        const reponseUtilisateur = objetUtilisateur && objetUtilisateur.reponse
+          ? objetUtilisateur.reponse
+          : "(pas de réponse)";
+
+        const bonneReponse = corrige[pageId].reponse;
+        const question = corrige[pageId].question;
+
+        const estCorrect = comparerReponses(reponseUtilisateur, bonneReponse);
+
+        if (estCorrect) {
+          totalBonnes++;
+        }
+
+        const bloc = document.createElement("div");
+        bloc.className = "bloc-page";
+
+        bloc.innerHTML = `
+          <h2>${pageId}</h2>
+          <div class="question">Question : ${question}</div>
+          <div class="reponse-utilisateur">Réponse utilisateur : ${reponseUtilisateur}</div>
+          <div class="bonne-reponse">Bonne réponse : ${bonneReponse}</div>
+          <div class="${estCorrect ? 'correct' : 'incorrect'}">
+            ${estCorrect ? 'Correct' : 'Incorrect'}
+          </div>
+        `;
+
+        zoneResultat.appendChild(bloc);
+      }
+
+      const score = document.createElement("div");
+      score.className = "score";
+      score.textContent = `Score total : ${totalBonnes} / ${totalQuestions}`;
+      zoneResultat.appendChild(score);
+    }
+
+    function viderToutesLesReponses() {
+      for (const pageId in corrige) {
+        localStorage.removeItem(pageId);
+      }
+
+      document.getElementById("resultat").innerHTML = "<p>Toutes les réponses ont été supprimées.</p>";
+    }
+  </script>
+
+</body>
+</html>
