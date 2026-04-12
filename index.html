@@ -6,13 +6,8 @@
   <style>
     body {
       font-family: Arial;
-      margin: 0;
-      padding: 0;
       background: #f5f5f5;
       text-align: center;
-    }
-
-    .container {
       margin-top: 100px;
     }
 
@@ -26,19 +21,24 @@
     button {
       padding: 10px 20px;
       cursor: pointer;
+      margin: 5px;
     }
   </style>
 </head>
 <body>
 
-  <!-- PAGE LOGIN -->
-  <div id="loginPage" class="container">
-    <h2>Connexion</h2>
-    <input type="text" id="username" placeholder="Identifiant">
-    <input type="password" id="password" placeholder="Mot de passe">
-    <button onclick="login()">Se connecter</button>
-    <p id="error" style="color:red;"></p>
-  </div>
+  <h2>Connexion</h2>
+
+  <input type="text" id="username" placeholder="Email">
+  <input type="password" id="password" placeholder="Mot de passe">
+
+  <button onclick="login()">Se connecter</button>
+
+  <button onclick="window.location.href='inscription.html'">
+    Créer un compte
+  </button>
+
+  <p id="error" style="color:red;"></p>
 
   <script>
     function login() {
@@ -46,14 +46,23 @@
       const password = document.getElementById("password").value;
       const error = document.getElementById("error");
 
-      // Comptes simulés
+      // Admin fixe
       if (username === "admin077@gmail.com" && password === "admin123426") {
-        window.location.href = "accueiladmin.html"; // redirection admin
+        window.location.href = "accueiladmin.html";
+        return;
       }
-      else if (username === "Oscar077@gmail.com" && password === "01092012") {
-        window.location.href = "Menu.html"; // redirection utilisateur
-      }
-      else {
+
+      // Récupération des comptes enregistrés
+      const comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+
+      // Recherche du compte
+      const utilisateur = comptes.find(
+        user => user.email === username && user.password === password
+      );
+
+      if (utilisateur) {
+        window.location.href = "Menu.html";
+      } else {
         error.textContent = "Identifiants incorrects";
       }
     }
