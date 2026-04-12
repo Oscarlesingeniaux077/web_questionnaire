@@ -27,24 +27,6 @@
       padding: 10px 20px;
       cursor: pointer;
     }
-
-    .hidden {
-      display: none;
-    }
-
-    .box {
-      padding: 20px;
-      margin: 20px;
-      border-radius: 10px;
-    }
-
-    .admin {
-      background: #ffdddd;
-    }
-
-    .user {
-      background: #ddffdd;
-    }
   </style>
 </head>
 <body>
@@ -58,30 +40,6 @@
     <p id="error" style="color:red;"></p>
   </div>
 
-  <!-- INTERFACE ADMIN -->
-  <div id="adminPage" class="hidden box admin">
-    <h2>Interface Administrateur</h2>
-    <p>Bienvenue Admin</p>
-    <button>Gérer les utilisateurs</button>
-    <button>Voir les statistiques</button>
-    <br><br>
-    <button onclick="logout()">Déconnexion</button>
-
-  </div>
-
-  <!-- INTERFACE UTILISATEUR -->
-  <div id="userPage" class="hidden box user">
-    <!-- <h2>Interface Utilisateur</h2>
-    <p>Bienvenue Utilisateur</p>
-    <button>Voir mon profil</button>
-    <button>Mes données</button>
-    <br><br>
-    <button onclick="logout()">Déconnexion</button> -->
-         <script>
-    window.location.href = "Menu.html";
-  </script>
-  </div>
-
   <script>
     function login() {
       const username = document.getElementById("username").value;
@@ -90,24 +48,14 @@
 
       // Comptes simulés
       if (username === "admin077@gmail.com" && password === "admin123426") {
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("adminPage").classList.remove("hidden");
-        error.textContent = "";
+        window.location.href = "#"; // redirection admin
       }
       else if (username === "Oscar077@gmail.com" && password === "01092012") {
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("userPage").classList.remove("hidden");
-        error.textContent = "";
+        window.location.href = "Menu.html"; // redirection utilisateur
       }
       else {
         error.textContent = "Identifiants incorrects";
       }
-    }
-
-    function logout() {
-      document.getElementById("adminPage").classList.add("hidden");
-      document.getElementById("userPage").classList.add("hidden");
-      document.getElementById("loginPage").classList.remove("hidden");
     }
   </script>
 
