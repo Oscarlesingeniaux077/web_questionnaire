@@ -2,57 +2,143 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Créer un compte</title>
+  <title>Tableau Admin</title>
   <style>
     body {
-      font-family: Arial;
-      background: #eef;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
       text-align: center;
-      margin-top: 50px;
+      margin: 0;
+      padding: 30px;
     }
 
-    input {
-      display: block;
-      margin: 10px auto;
-      padding: 10px;
-      width: 250px;
+    h1 {
+      font-size: 42px;
+      margin-bottom: 30px;
+    }
+
+    table {
+      margin: 0 auto 30px auto;
+      border-collapse: collapse;
+      width: 80%;
+      background-color: white;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #007BFF;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .info {
+      font-size: 22px;
+      margin-bottom: 20px;
     }
 
     button {
-      padding: 10px 20px;
+      padding: 12px 24px;
+      font-size: 16px;
       cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #007BFF;
+      color: white;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+    }
+
+    .delete-btn:hover {
+      background-color: #a71d2a;
     }
   </style>
 </head>
 <body>
 
-  <h1>Créer un compte</h1>
+  <h1>Liste des comptes clients</h1>
 
-  <input type="text" placeholder="Nom" id="nom">
-  <input type="text" placeholder="Prénom" id="prenom">
-  <input type="number" placeholder="Âge" id="age">
-  <input type="email" placeholder="Adresse mail" id="email">
-  <input type="password" placeholder="Mot de passe" id="password">
+  <div class="info" id="nombreComptes">Nombre total de comptes : 0</div>
 
-  <button onclick="creerCompte()">Valider</button>
+  <table>
+    <thead>
+      <tr>
+        <th>N°</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Âge</th>
+        <th>Adresse mail</th>
+        <th>Mot de passe</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+  </table>
 
-  <p id="message"></p>
+  <button onclick="window.location.href='accueiladmin.html'">Retour</button>
 
   <script>
-    function creerCompte() {
-      const nom = document.getElementById("nom").value;
-      const prenom = document.getElementById("prenom").value;
-      const age = document.getElementById("age").value;
-      const email = document.getElementById("email").value;
+    function afficherComptes() {
+      const comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+      const tableBody = document.getElementById("tableBody");
+      const nombreComptes = document.getElementById("nombreComptes");
 
-      document.getElementById("message").textContent =
-        "Compte créé pour " + prenom + " " + nom;
+      tableBody.innerHTML = "";
 
-      // Redirection après création
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 2000);
+      if (comptes.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="7">Aucun compte enregistré</td>
+          </tr>
+        `;
+      } else {
+        comptes.forEach(function(compte, index) {
+          const ligne = document.createElement("tr");
+
+          ligne.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${compte.nom}</td>
+            <td>${compte.prenom}</td>
+            <td>${compte.age}</td>
+            <td>${compte.email}</td>
+            <td>${compte.password}</td>
+            <td>
+              <button class="delete-btn" onclick="supprimerCompte(${index})">
+                Supprimer
+              </button>
+            </td>
+          `;
+
+          tableBody.appendChild(ligne);
+        });
+      }
+
+      nombreComptes.textContent = "Nombre total de comptes : " + comptes.length;
     }
+
+    function supprimerCompte(index) {
+      const comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+      comptes.splice(index, 1);
+      localStorage.setItem("comptes", JSON.stringify(comptes));
+      afficherComptes();
+    }
+
+    afficherComptes();
   </script>
 
 </body>
