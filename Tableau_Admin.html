@@ -93,49 +93,83 @@
   <button onclick="window.location.href='accueiladmin.html'">Retour</button>
 
   <script>
-    function afficherComptes() {
-      const comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+    async function afficherComptes() {
       const tableBody = document.getElementById("tableBody");
       const nombreComptes = document.getElementById("nombreComptes");
 
-      tableBody.innerHTML = "";
+      tableBody.innerHTML = "<tr><td colspan='7'>Chargement...</td></tr>";
 
-      if (comptes.length === 0) {
+      try {
+        const response = await fetch("get_comptes.php");
+        const comptes = await response.json();
+
+        tableBody.innerHTML = "";
+
+        if (comptes.length === 0) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="7">Aucun compte enregistré</td>
+            </tr>
+          `;
+        } else {
+          comptes.forEach(function(compte, index) {
+            const ligne = document.createElement("tr");
+
+            ligne.innerHTML = `
+              <td>${index + 1}</td>
+              <td>${compte.nom}</td>
+              <td>${compte.prenom}</td>
+              <td>${compte.age}</td>
+              <td>${compte.email}</td>
+              <td>${compte.password}</td>
+              <td>
+                <button class="delete-btn" onclick="supprimerCompte(${index})">
+                  Supprimer
+                </button>
+              </td>
+            `;
+
+            tableBody.appendChild(ligne);
+          });
+        }
+
+        nombreComptes.textContent = "Nombre total de comptes : " + comptes.length;
+
+      } catch (error) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="7">Aucun compte enregistré</td>
+            <td colspan="7">Erreur de chargement des données</td>
           </tr>
         `;
-      } else {
-        comptes.forEach(function(compte, index) {
-          const ligne = document.createElement("tr");
-
-          ligne.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${compte.nom}</td>
-            <td>${compte.prenom}</td>
-            <td>${compte.age}</td>
-            <td>${compte.email}</td>
-            <td>${compte.password}</td>
-            <td>
-              <button class="delete-btn" onclick="supprimerCompte(${index})">
-                Supprimer
-              </button>
-            </td>
-          `;
-
-          tableBody.appendChild(ligne);
-        });
+        console.error(error);
       }
-
-      nombreComptes.textContent = "Nombre total de comptes : " + comptes.length;
     }
 
-    function supprimerCompte(index) {
-      const comptes = JSON.parse(localStorage.getItem("comptes")) || [];
-      comptes.splice(index, 1);
-      localStorage.setItem("comptes", JSON.stringify(comptes));
-      afficherComptes();
+    async function supprimerCompte(index) {
+      if (!confirm("Voulez-vous vraiment supprimer ce compte ?")) {
+        return;
+      }
+
+      try {
+        const response = await fetch("delete_compte.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ index: index })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          afficherComptes();
+        } else {
+          alert("Erreur : " + result.message);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Erreur lors de la suppression.");
+      }
     }
 
     afficherComptes();
