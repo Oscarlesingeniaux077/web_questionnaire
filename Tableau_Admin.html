@@ -1,137 +1,290 @@
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"> 
-  <title>Tableau Admin</title>
-  <style>
-    body {
-        font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      text-align: center;
-       margin: 0;
-      padding: 30px;
-    }
-    h1 {
-      font-size: 42px;
-      margin-bottom: 30px;
-    }
+<meta charset="UTF-8">
+<title>Administration Comptes</title>
 
-    table {
-      margin: 0 auto 30px auto;
-      border-collapse: collapse;
-      width: 80%;
-      background-color: white;
-    }
+<style>
+body{
+font-family:Arial;
+background:#f5f5f5;
+margin:0;
+padding:30px;
+text-align:center;
+}
 
-    th, td {
-      border: 1px solid #ccc;
-      padding: 12px;
-      text-align: center;
-    }
+h1{
+font-size:42px;
+}
 
-    th {
-      background-color: #007BFF;
-      color: white;
-    }
+table{
+margin:auto;
+width:90%;
+border-collapse:collapse;
+background:white;
+}
 
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
+th,td{
+border:1px solid #ccc;
+padding:12px;
+}
 
-    .info {
-      font-size: 22px;
-      margin-bottom: 20px;
-    }
+th{
+background:#007BFF;
+color:white;
+}
 
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      border-radius: 8px;
-      background-color: #007BFF;
-      color: white;
-      margin: 5px;
-    }
+tr:nth-child(even){
+background:#f2f2f2;
+}
 
-    button:hover {
-      background-color: #0056b3;
-    }
+.info{
+font-size:22px;
+margin:20px;
+}
 
-    .delete-btn {
-      background-color: #dc3545;
-    }
+button{
+padding:10px 20px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#007BFF;
+color:white;
+margin:4px;
+}
 
-    .delete-btn:hover {
-      background-color: #a71d2a;
-    }
-  </style>
+button:hover{
+background:#0056b3;
+}
+
+.delete-btn{
+background:#dc3545;
+}
+
+.delete-btn:hover{
+background:#a71d2a;
+}
+
+#detailCompte{
+display:none;
+margin:30px auto;
+width:75%;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 0 10px rgba(0,0,0,.2);
+text-align:left;
+}
+
+#detailCompte h2{
+text-align:center;
+color:#007BFF;
+}
+
+.reponses{
+background:#eef5ff;
+padding:20px;
+margin-top:20px;
+border-radius:10px;
+}
+</style>
+
 </head>
 <body>
- <h1>Liste des comptes clients</h1>
- <div class="info" id="nombreComptes">Nombre total de comptes : 0</div>
- <table>
-    <thead>
-      <tr>
-        <th>N°</th>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Âge</th>
-        <th>Adresse mail</th>
-        <th>Mot de passe</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody">
-    </tbody>
-  </table>
-   <button onclick="window.location.href='accueiladmin.html'">Retour</button>
 
-  <script>
-     function afficherComptes() {
-      const comptes = JSON.parse(localStorage.getItem("comptes")) || [];
-      const tableBody = document.getElementById("tableBody");
-      const nombreComptes = document.getElementById("nombreComptes");
+<h1>Liste des comptes clients</h1>
 
-      tableBody.innerHTML = "";
-       if (comptes.length === 0) {
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="7">Aucun compte enregistré</td>
-          </tr>
-        `;
-      } else {
-        comptes.forEach(function(compte, index) {
-          const ligne = document.createElement("tr");
-            ligne.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${compte.nom}</td>
-            <td>${compte.prenom}</td>
-            <td>${compte.age}</td>
-            <td>${compte.email}</td>
-            <td>${compte.password}</td>
-            <td>
-              <button class="delete-btn" onclick="supprimerCompte(${index})">
-                Supprimer
-              </button>
-            </td>
-          `;
+<div class="info" id="nombreComptes">
+Nombre total de comptes : 0
+</div>
 
-          tableBody.appendChild(ligne);
-        });
-      }
+<table>
+<thead>
+<tr>
+<th>N°</th>
+<th>Nom</th>
+<th>Prénom</th>
+<th>Âge</th>
+<th>Email</th>
+<th>Mot de passe</th>
+<th>Consulter</th>
+<th>Supprimer</th>
+</tr>
+</thead>
 
-      nombreComptes.textContent = "Nombre total de comptes : " + comptes.length;
-    }
+<tbody id="tableBody"></tbody>
+</table>
 
-    function supprimerCompte(index) {
-      const comptes = JSON.parse(localStorage.getItem("comptes")) || [];
-      comptes.splice(index, 1);
-      localStorage.setItem("comptes", JSON.stringify(comptes));
-      afficherComptes();
-    }
+<br>
 
-    afficherComptes();
-  </script>
+<button onclick="window.location.href='accueiladmin.html'">
+Retour
+</button>
+
+<div id="detailCompte"></div>
+
+<script>
+
+function afficherComptes(){
+
+let comptes=JSON.parse(localStorage.getItem("comptes")) || [];
+
+let tableBody=document.getElementById("tableBody");
+
+let nombre=document.getElementById("nombreComptes");
+
+tableBody.innerHTML="";
+
+if(comptes.length===0){
+
+tableBody.innerHTML=`
+<tr>
+<td colspan="8">
+Aucun compte enregistré
+</td>
+</tr>
+`;
+
+}
+
+else{
+
+comptes.forEach(function(compte,index){
+
+let ligne=document.createElement("tr");
+
+ligne.innerHTML=`
+
+<td>${index+1}</td>
+<td>${compte.nom}</td>
+<td>${compte.prenom}</td>
+<td>${compte.age}</td>
+<td>${compte.email}</td>
+<td>${compte.password}</td>
+
+<td>
+<button onclick="consulterCompte(${index})">
+Consulter
+</button>
+</td>
+
+<td>
+<button class="delete-btn"
+onclick="supprimerCompte(${index})">
+Supprimer
+</button>
+</td>
+
+`;
+
+tableBody.appendChild(ligne);
+
+});
+
+}
+
+nombre.textContent=
+"Nombre total de comptes : "+comptes.length;
+
+}
+
+
+function supprimerCompte(index){
+
+let comptes=
+JSON.parse(localStorage.getItem("comptes")) || [];
+
+comptes.splice(index,1);
+
+localStorage.setItem(
+"comptes",
+JSON.stringify(comptes)
+);
+
+document.getElementById("detailCompte").style.display="none";
+
+afficherComptes();
+
+}
+
+
+function consulterCompte(index){
+
+let comptes=
+JSON.parse(localStorage.getItem("comptes")) || [];
+
+let compte=comptes[index];
+
+let bloc=document.getElementById("detailCompte");
+
+let html=`
+
+<h2>Consultation du compte</h2>
+
+<p><strong>Nom :</strong> ${compte.nom}</p>
+
+<p><strong>Prénom :</strong> ${compte.prenom}</p>
+
+<p><strong>Âge :</strong> ${compte.age}</p>
+
+<p><strong>Email :</strong> ${compte.email}</p>
+
+<p><strong>Mot de passe :</strong> ${compte.password}</p>
+
+<div class="reponses">
+<h3>Toutes les réponses enregistrées</h3>
+
+`;
+
+if(compte.reponses && compte.reponses.length>0){
+
+compte.reponses.forEach(function(r,i){
+
+html+=`
+<p>
+<strong>Réponse ${i+1} :</strong>
+${r}
+</p>
+`;
+
+});
+
+}
+
+else{
+
+html+=`
+<p>Aucune réponse enregistrée.</p>
+`;
+
+}
+
+html+=`
+</div>
+
+<br>
+
+<button onclick="
+document.getElementById('detailCompte').style.display='none'
+">
+Fermer
+</button>
+`;
+
+bloc.innerHTML=html;
+
+bloc.style.display="block";
+
+window.scrollTo({
+top:document.body.scrollHeight,
+behavior:"smooth"
+});
+
+}
+
+afficherComptes();
+
+</script>
 
 </body>
 </html>
