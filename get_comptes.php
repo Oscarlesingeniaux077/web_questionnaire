@@ -1,11 +1,19 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
+header("Content-Type: application/json");
 
-$fichier = 'comptes.json';
+$fichier = "comptes.json";
 
-if (file_exists($fichier)) {
-    $comptes = json_decode(file_get_contents($fichier), true);
-    echo json_encode($comptes ?: []);
-} else {
+if (!file_exists($fichier)) {
     echo json_encode([]);
+    exit;
 }
+
+$contenu = file_get_contents($fichier);
+
+if ($contenu === false || trim($contenu) === "") {
+    echo json_encode([]);
+    exit;
+}
+
+echo $contenu;
+?>
