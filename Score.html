@@ -1,178 +1,146 @@
 
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Correction de toutes les pages</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Score</title>
 
-    h1 {
-      margin-bottom: 30px;
-    }
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(0deg, #e0ecff, #6B8E23);
+  padding:30px;
+  box-sizing:border-box;
+}
 
-    .bloc-page {
-      margin-bottom: 20px;
-      padding: 20px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      background: #fafafa;
-    }
+h1{
+  text-align:center;
+  font-size:40px;
+  color:#1f1f1f;
+}
 
-    .question {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+.card{
+  max-width:700px;
+  margin:40px auto;
+  background:white;
+  padding:30px;
+  border-radius:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
 
-    .reponse-utilisateur {
-      margin: 8px 0;
-    }
+.info{
+  text-align:center;
+  font-size:22px;
+  margin-bottom:25px;
+  font-weight:bold;
+}
 
-    .bonne-reponse {
-      margin: 8px 0;
-      color: #0044cc;
-    }
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+}
 
-    .correct {
-      color: green;
-      font-weight: bold;
-    }
+th,td{
+  border:1px solid #ccc;
+  padding:14px;
+  text-align:center;
+  font-size:18px;
+}
 
-    .incorrect {
-      color: red;
-      font-weight: bold;
-    }
+th{
+  background:#007BFF;
+  color:white;
+}
 
-    .score {
-      margin-top: 30px;
-      padding: 15px;
-      font-size: 20px;
-      font-weight: bold;
-      background: #eef5ff;
-      border: 1px solid #aac8ff;
-      border-radius: 8px;
-    }
+tr:nth-child(even){
+  background:#f2f2f2;
+}
 
-    button {
-      padding: 10px 16px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-right: 10px;
-      margin-bottom: 20px;
-    }
-  </style>
+.btn{
+  display:block;
+  width:max-content;
+  margin:30px auto 0;
+  padding:12px 24px;
+  background:#007BFF;
+  color:white;
+  text-decoration:none;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.btn:hover{
+  background:#0056b3;
+}
+
+.message{
+  text-align:center;
+  color:#c62828;
+  font-size:20px;
+  font-weight:bold;
+}
+</style>
 </head>
+
 <body>
 
-  <h1>Correction de toutes les pages</h1>
+<h1>Mes scores</h1>
 
-  <button onclick="corrigerToutesLesPages()">Afficher la correction</button>
-  <button onclick="viderToutesLesReponses()">Supprimer toutes les réponses</button>
+<div class="card">
+  <div class="info" id="infoUtilisateur"></div>
 
-  <div id="resultat"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>Parcours attribué</th>
+        <th>Note</th>
+      </tr>
+    </thead>
 
-  <script>
-    const corrige = {
-      page1: {
-        question: "<span class="fraction">
-    <span class="top">4</span>
-    <span class="bottom">49</span>
-  </span>
+    <tbody id="scoreBody"></tbody>
+  </table>
 
-  <span class="operation">×</span>
+  <a href="MenuUtilisateur.html" class="btn">Retour au menu</a>
+</div>
 
-  <span class="fraction">
-    <span class="top">7</span>
-    <span class="bottom">18</span>
-  </span>",
-        reponse: "<span class="fraction">
-    <span class="top">0</span>
-    <span class="bottom">0</span>
-  </span>"
-      },
-      page2: {
-        question: "Combien font 2 + 2 ?",
-        reponse: "4"
-      },
-      page3: {
-        question: "Explique ce qu'est une fraction.",
-        reponse: "Une fraction représente une ou plusieurs parts d'un tout."
-      }
-    };
+<script>
+const utilisateurConnecte = JSON.parse(localStorage.getItem("utilisateurConnecte"));
+const comptes = JSON.parse(localStorage.getItem("comptes")) || [];
 
-    function normaliserTexte(texte) {
-      return texte
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, " ");
-    }
+const infoUtilisateur = document.getElementById("infoUtilisateur");
+const scoreBody = document.getElementById("scoreBody");
 
-    function comparerReponses(reponseUtilisateur, bonneReponse) {
-      return normaliserTexte(reponseUtilisateur) === normaliserTexte(bonneReponse);
-    }
+if (!utilisateurConnecte) {
+  window.location.href = "index.html";
+} else {
+  infoUtilisateur.textContent =
+    utilisateurConnecte.prenom + " " + utilisateurConnecte.nom;
 
-    function corrigerToutesLesPages() {
-      const zoneResultat = document.getElementById("resultat");
-      zoneResultat.innerHTML = "";
+  const compte = comptes.find(function(c) {
+    return c.email === utilisateurConnecte.email;
+  });
 
-      let totalQuestions = 0;
-      let totalBonnes = 0;
-
-      for (const pageId in corrige) {
-        totalQuestions++;
-
-        const donnees = localStorage.getItem(pageId);
-        const objetUtilisateur = donnees ? JSON.parse(donnees) : null;
-
-        const reponseUtilisateur = objetUtilisateur && objetUtilisateur.reponse
-          ? objetUtilisateur.reponse
-          : "(pas de réponse)";
-
-        const bonneReponse = corrige[pageId].reponse;
-        const question = corrige[pageId].question;
-
-        const estCorrect = comparerReponses(reponseUtilisateur, bonneReponse);
-
-        if (estCorrect) {
-          totalBonnes++;
-        }
-
-        const bloc = document.createElement("div");
-        bloc.className = "bloc-page";
-
-        bloc.innerHTML = `
-          <h2>${pageId}</h2>
-          <div class="question">Question : ${question}</div>
-          <div class="reponse-utilisateur">Réponse utilisateur : ${reponseUtilisateur}</div>
-          <div class="bonne-reponse">Bonne réponse : ${bonneReponse}</div>
-          <div class="${estCorrect ? 'correct' : 'incorrect'}">
-            ${estCorrect ? 'Correct' : 'Incorrect'}
-          </div>
-        `;
-
-        zoneResultat.appendChild(bloc);
-      }
-
-      const score = document.createElement("div");
-      score.className = "score";
-      score.textContent = `Score total : ${totalBonnes} / ${totalQuestions}`;
-      zoneResultat.appendChild(score);
-    }
-
-    function viderToutesLesReponses() {
-      for (const pageId in corrige) {
-        localStorage.removeItem(pageId);
-      }
-
-      document.getElementById("resultat").innerHTML = "<p>Toutes les réponses ont été supprimées.</p>";
-    }
-  </script>
+  if (!compte) {
+    scoreBody.innerHTML = `
+      <tr>
+        <td colspan="2" class="message">
+          Aucun compte trouvé.
+        </td>
+      </tr>
+    `;
+  } else {
+    scoreBody.innerHTML = `
+      <tr>
+        <td>Parcours 2</td>
+        <td>${compte.noteParcours2 ? compte.noteParcours2 + " /20" : "Non noté"}</td>
+      </tr>
+    `;
+  }
+}
+</script>
 
 </body>
 </html>
