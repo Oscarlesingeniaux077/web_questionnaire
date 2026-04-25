@@ -103,7 +103,7 @@
     const pageId = "page1";
 
     function enregistrerReponse() {
-      const reponse = document.getElementById("reponse").value.trim();
+      const reponse = document.getElementById("reponse1").value.trim();
 
       localStorage.setItem(pageId, JSON.stringify({
         reponse: reponse
@@ -121,7 +121,7 @@
       }
 
       const objet = JSON.parse(donnees);
-      document.getElementById("reponse").value = objet.reponse || "";
+      document.getElementById("reponse1").value = objet.reponse || "";
       document.getElementById("message").textContent = "Réponse rechargée.";
     }
 
