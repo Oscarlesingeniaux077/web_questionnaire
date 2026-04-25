@@ -19,7 +19,7 @@ font-size:42px;
 
 table{
 margin:auto;
-width:90%;
+width:95%;
 border-collapse:collapse;
 background:white;
 }
@@ -27,6 +27,7 @@ background:white;
 th,td{
 border:1px solid #ccc;
 padding:12px;
+text-align:center;
 }
 
 th{
@@ -68,7 +69,7 @@ background:#a71d2a;
 #detailCompte{
 display:none;
 margin:30px auto;
-width:75%;
+width:80%;
 background:white;
 padding:30px;
 border-radius:15px;
@@ -87,9 +88,14 @@ padding:20px;
 margin-top:20px;
 border-radius:10px;
 }
-</style>
 
+input{
+padding:8px;
+font-size:16px;
+}
+</style>
 </head>
+
 <body>
 
 <h1>Liste des comptes clients</h1>
@@ -108,6 +114,7 @@ Nombre total de comptes : 0
 <th>Email</th>
 <th>Mot de passe</th>
 <th>Consulter</th>
+<th>Noter</th>
 <th>Supprimer</th>
 </tr>
 </thead>
@@ -124,56 +131,30 @@ Retour
 <div id="detailCompte"></div>
 
 <script>
-function consulterReponses() {
-  const pages = ["P2_Page2.html", "P2_Page3.html", "P2_Page4.html"];
-
-  let html = `<h2>Toutes les réponses enregistrées</h2>`;
-
-  pages.forEach(function(page) {
-    const donnees = JSON.parse(localStorage.getItem(page)) || {};
-
-    html += `
-      <div class="reponses">
-        <h3>${page}</h3>
-        <p><strong>Réponse :</strong> ${donnees.reponse || "Aucune réponse enregistrée"}</p>
-      </div>
-    `;
-  });
-
-  document.getElementById("detailCompte").innerHTML = html;
-  document.getElementById("detailCompte").style.display = "block";
-}
 function afficherComptes(){
 
-let comptes=JSON.parse(localStorage.getItem("comptes")) || [];
+let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+let tableBody = document.getElementById("tableBody");
+let nombre = document.getElementById("nombreComptes");
 
-let tableBody=document.getElementById("tableBody");
+tableBody.innerHTML = "";
 
-let nombre=document.getElementById("nombreComptes");
+if(comptes.length === 0){
 
-tableBody.innerHTML="";
-
-if(comptes.length===0){
-
-tableBody.innerHTML=`
+tableBody.innerHTML = `
 <tr>
-<td colspan="8">
-Aucun compte enregistré
-</td>
+<td colspan="9">Aucun compte enregistré</td>
 </tr>
 `;
 
-}
-
-else{
+} else {
 
 comptes.forEach(function(compte,index){
 
-let ligne=document.createElement("tr");
+let ligne = document.createElement("tr");
 
-ligne.innerHTML=`
-
-<td>${index+1}</td>
+ligne.innerHTML = `
+<td>${index + 1}</td>
 <td>${compte.nom}</td>
 <td>${compte.prenom}</td>
 <td>${compte.age}</td>
@@ -187,12 +168,16 @@ Consulter
 </td>
 
 <td>
-<button class="delete-btn"
-onclick="supprimerCompte(${index})">
-Supprimer
+<button onclick="noterCompte(${index})">
+Noter
 </button>
 </td>
 
+<td>
+<button class="delete-btn" onclick="supprimerCompte(${index})">
+Supprimer
+</button>
+</td>
 `;
 
 tableBody.appendChild(ligne);
@@ -201,86 +186,71 @@ tableBody.appendChild(ligne);
 
 }
 
-nombre.textContent=
-"Nombre total de comptes : "+comptes.length;
+nombre.textContent = "Nombre total de comptes : " + comptes.length;
 
 }
 
-
 function supprimerCompte(index){
 
-let comptes=
-JSON.parse(localStorage.getItem("comptes")) || [];
+let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
 
 comptes.splice(index,1);
 
-localStorage.setItem(
-"comptes",
-JSON.stringify(comptes)
-);
+localStorage.setItem("comptes", JSON.stringify(comptes));
 
-document.getElementById("detailCompte").style.display="none";
+document.getElementById("detailCompte").style.display = "none";
 
 afficherComptes();
 
 }
 
-
 function consulterCompte(index){
 
-let comptes=
-JSON.parse(localStorage.getItem("comptes")) || [];
+let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+let compte = comptes[index];
+let bloc = document.getElementById("detailCompte");
 
-let compte=comptes[index];
-
-let bloc=document.getElementById("detailCompte");
-
-let html=`
-
+let html = `
 <h2>Consultation du compte</h2>
 
 <p><strong>Nom :</strong> ${compte.nom}</p>
-
 <p><strong>Prénom :</strong> ${compte.prenom}</p>
-
 <p><strong>Âge :</strong> ${compte.age}</p>
-
 <p><strong>Email :</strong> ${compte.email}</p>
-
 <p><strong>Mot de passe :</strong> ${compte.password}</p>
 
 <div class="reponses">
 <h3>Toutes les réponses enregistrées</h3>
-
 `;
 
-if(compte.reponses && compte.reponses.length>0){
+if(compte.reponses && compte.reponses.length > 0){
 
 compte.reponses.forEach(function(r,i){
 
-html+=`
+html += `
 <p>
-<strong>Réponse ${i+1} :</strong>
-${r}
+<strong>Réponse ${i + 1} :</strong> ${r}
 </p>
 `;
 
 });
 
-}
+} else {
 
-else{
-
-html+=`
-<p>Aucune réponse enregistrée.</p>
+html += `
+<p>Aucune réponse enregistrée dans le compte.</p>
 `;
 
 }
 
-html+=`
+html += `
 </div>
 
 <br>
+
+<button onclick="consulterReponsesParcours2()">
+Voir les réponses du Parcours 2
+</button>
 
 <button onclick="
 document.getElementById('detailCompte').style.display='none'
@@ -289,19 +259,115 @@ Fermer
 </button>
 `;
 
-bloc.innerHTML=html;
-
-bloc.style.display="block";
+bloc.innerHTML = html;
+bloc.style.display = "block";
 
 window.scrollTo({
-top:document.body.scrollHeight,
-behavior:"smooth"
+top: document.body.scrollHeight,
+behavior: "smooth"
 });
 
 }
 
+function consulterReponsesParcours2(){
+
+const pages = ["P2_Page2.html", "P2_Page3.html", "P2_Page4.html"];
+let bloc = document.getElementById("detailCompte");
+
+let html = `
+<h2>Réponses enregistrées - Parcours 2</h2>
+`;
+
+pages.forEach(function(page){
+
+const donnees = JSON.parse(localStorage.getItem(page)) || {};
+
+html += `
+<div class="reponses">
+<h3>${page}</h3>
+<p><strong>Réponse :</strong> ${donnees.reponse || "Aucune réponse enregistrée"}</p>
+</div>
+`;
+
+});
+
+html += `
+<br>
+<button onclick="
+document.getElementById('detailCompte').style.display='none'
+">
+Fermer
+</button>
+`;
+
+bloc.innerHTML = html;
+bloc.style.display = "block";
+
+}
+
+function noterCompte(index){
+
+let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+let compte = comptes[index];
+let noteExistante = compte.noteParcours2 || "";
+let bloc = document.getElementById("detailCompte");
+
+bloc.innerHTML = `
+<h2>Notation Parcours 2</h2>
+
+<table style="width:100%; border-collapse:collapse; margin-top:20px;">
+<tr>
+<th>Compte</th>
+<th>Parcours 2</th>
+</tr>
+
+<tr>
+<td>${compte.nom} ${compte.prenom}</td>
+<td>
+<input type="number" id="note" value="${noteExistante}" min="0" max="20">
+/20
+</td>
+</tr>
+</table>
+
+<br><br>
+
+<button onclick="enregistrerNote(${index})">
+Enregistrer note
+</button>
+
+<button onclick="
+document.getElementById('detailCompte').style.display='none'
+">
+Fermer
+</button>
+`;
+
+bloc.style.display = "block";
+
+window.scrollTo({
+top: document.body.scrollHeight,
+behavior: "smooth"
+});
+
+}
+
+function enregistrerNote(index){
+
+let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+let note = document.getElementById("note").value;
+
+comptes[index].noteParcours2 = note;
+
+localStorage.setItem("comptes", JSON.stringify(comptes));
+
+alert("Note enregistrée.");
+
 afficherComptes();
 
+}
+
+afficherComptes();
 </script>
 
 </body>
