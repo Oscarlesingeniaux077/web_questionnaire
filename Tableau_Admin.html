@@ -124,7 +124,25 @@ Retour
 <div id="detailCompte"></div>
 
 <script>
+function consulterReponses() {
+  const pages = ["P2_Page2.html", "P2_Page3.html", "P2_Page4.html"];
 
+  let html = `<h2>Toutes les réponses enregistrées</h2>`;
+
+  pages.forEach(function(page) {
+    const donnees = JSON.parse(localStorage.getItem(page)) || {};
+
+    html += `
+      <div class="reponses">
+        <h3>${page}</h3>
+        <p><strong>Réponse :</strong> ${donnees.reponse || "Aucune réponse enregistrée"}</p>
+      </div>
+    `;
+  });
+
+  document.getElementById("detailCompte").innerHTML = html;
+  document.getElementById("detailCompte").style.display = "block";
+}
 function afficherComptes(){
 
 let comptes=JSON.parse(localStorage.getItem("comptes")) || [];
