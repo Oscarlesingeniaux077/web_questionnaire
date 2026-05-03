@@ -86,6 +86,29 @@ tr:nth-child(even){
   text-align:left;
   white-space:pre-wrap;
 }
+
+.lien-corrige{
+  display:inline-block;
+  margin:4px;
+  padding:8px 12px;
+  background:#007BFF;
+  color:white;
+  text-decoration:none;
+  border-radius:8px;
+  font-size:15px;
+}
+
+.lien-corrige:hover{
+  background:#0056b3;
+}
+
+.download{
+  background:#28a745;
+}
+
+.download:hover{
+  background:#1e7e34;
+}
 </style>
 </head>
 
@@ -152,12 +175,29 @@ if (!utilisateurConnecte) {
       let appreciation = compte["appreciationParcours" + p];
       let corrige = compte["corrigeParcours" + p + "Nom"];
 
+      let affichageCorrige = "Aucun corrigé";
+
+      if (corrige) {
+
+        let urlCorrige = "corriges/" + corrige;
+
+        affichageCorrige = `
+          <a class="lien-corrige" href="${urlCorrige}" target="_blank">
+            Ouvrir
+          </a>
+
+          <a class="lien-corrige download" href="${urlCorrige}" download>
+            Télécharger
+          </a>
+        `;
+      }
+
       html += `
         <tr>
           <td>Parcours ${p}</td>
           <td>${note ? note + " /20" : "Non noté"}</td>
           <td class="appreciation">${appreciation ? appreciation : "Aucune appréciation"}</td>
-          <td>${corrige ? corrige : "Aucun corrigé"}</td>
+          <td>${affichageCorrige}</td>
         </tr>
       `;
     }
