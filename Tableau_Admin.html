@@ -5,94 +5,22 @@
 <title>Administration Comptes</title>
 
 <style>
-body{
-font-family:Arial;
-background:#f5f5f5;
-margin:0;
-padding:30px;
-text-align:center;
-}
-
-h1{
-font-size:42px;
-}
-
-table{
-margin:auto;
-width:95%;
-border-collapse:collapse;
-background:white;
-}
-
-th,td{
-border:1px solid #ccc;
-padding:12px;
-text-align:center;
-}
-
-th{
-background:#007BFF;
-color:white;
-}
-
-tr:nth-child(even){
-background:#f2f2f2;
-}
-
-.info{
-font-size:22px;
-margin:20px;
-}
-
-button{
-padding:10px 20px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-background:#007BFF;
-color:white;
-margin:4px;
-}
-
-button:hover{
-background:#0056b3;
-}
-
-.delete-btn{
-background:#dc3545;
-}
-
-.delete-btn:hover{
-background:#a71d2a;
-}
-
-#detailCompte{
-display:none;
-margin:30px auto;
-width:80%;
-background:white;
-padding:30px;
-border-radius:15px;
-box-shadow:0 0 10px rgba(0,0,0,.2);
-text-align:left;
-}
-
-#detailCompte h2{
-text-align:center;
-color:#007BFF;
-}
-
-.reponses{
-background:#eef5ff;
-padding:20px;
-margin-top:20px;
-border-radius:10px;
-}
-
-input{
-padding:8px;
-font-size:16px;
-}
+body{font-family:Arial;background:#f5f5f5;margin:0;padding:30px;text-align:center;}
+h1{font-size:42px;}
+table{margin:auto;width:95%;border-collapse:collapse;background:white;}
+th,td{border:1px solid #ccc;padding:12px;text-align:center;}
+th{background:#007BFF;color:white;}
+tr:nth-child(even){background:#f2f2f2;}
+.info{font-size:22px;margin:20px;}
+button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;background:#007BFF;color:white;margin:4px;}
+button:hover{background:#0056b3;}
+.delete-btn{background:#dc3545;}
+.delete-btn:hover{background:#a71d2a;}
+#detailCompte{display:none;margin:30px auto;width:90%;background:white;padding:30px;border-radius:15px;box-shadow:0 0 10px rgba(0,0,0,.2);text-align:left;}
+#detailCompte h2{text-align:center;color:#007BFF;}
+.reponses{background:#eef5ff;padding:20px;margin-top:20px;border-radius:10px;}
+input, textarea{padding:8px;font-size:16px;}
+textarea{resize:vertical;}
 </style>
 </head>
 
@@ -118,15 +46,12 @@ Nombre total de comptes : 0
 <th>Supprimer</th>
 </tr>
 </thead>
-
 <tbody id="tableBody"></tbody>
 </table>
 
 <br>
 
-<button onclick="window.location.href='accueiladmin.html'">
-Retour
-</button>
+<button onclick="window.location.href='accueiladmin.html'">Retour</button>
 
 <div id="detailCompte"></div>
 
@@ -162,21 +87,15 @@ ligne.innerHTML = `
 <td>${compte.password}</td>
 
 <td>
-<button onclick="consulterCompte(${index})">
-Consulter
-</button>
+<button onclick="consulterCompte(${index})">Consulter</button>
 </td>
 
 <td>
-<button onclick="noterCompte(${index})">
-Noter
-</button>
+<button onclick="noterCompte(${index})">Noter</button>
 </td>
 
 <td>
-<button class="delete-btn" onclick="supprimerCompte(${index})">
-Supprimer
-</button>
+<button class="delete-btn" onclick="supprimerCompte(${index})">Supprimer</button>
 </td>
 `;
 
@@ -193,7 +112,6 @@ nombre.textContent = "Nombre total de comptes : " + comptes.length;
 function supprimerCompte(index){
 
 let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
-
 comptes.splice(index,1);
 
 localStorage.setItem("comptes", JSON.stringify(comptes));
@@ -218,12 +136,15 @@ let html = `
 <p><strong>Âge :</strong> ${compte.age}</p>
 <p><strong>Email :</strong> ${compte.email}</p>
 <p><strong>Mot de passe :</strong> ${compte.password}</p>
+<p><strong>Note Parcours 2 :</strong> ${compte.noteParcours2 || "Aucune note"}/20</p>
+<p><strong>Appréciation :</strong> ${compte.appreciationParcours2 || "Aucune appréciation"}</p>
+<p><strong>Corrigé :</strong> ${compte.corrigeParcours2Nom || "Aucun corrigé ajouté"}</p>
 
 <div class="reponses">
 <h3>Toutes les réponses enregistrées</h3>
 `;
 
-if(compte.reponse1 && compte.reponse1.length > 0){
+if(compte.reponses && compte.reponses.length > 0){
 
 compte.reponses.forEach(function(r,i){
 
@@ -252,9 +173,7 @@ html += `
 Voir les réponses du Parcours 2
 </button>
 
-<button onclick="
-document.getElementById('detailCompte').style.display='none'
-">
+<button onclick="document.getElementById('detailCompte').style.display='none'">
 Fermer
 </button>
 `;
@@ -293,9 +212,7 @@ html += `
 
 html += `
 <br>
-<button onclick="
-document.getElementById('detailCompte').style.display='none'
-">
+<button onclick="document.getElementById('detailCompte').style.display='none'">
 Fermer
 </button>
 `;
@@ -309,7 +226,11 @@ function noterCompte(index){
 
 let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
 let compte = comptes[index];
+
 let noteExistante = compte.noteParcours2 || "";
+let appreciationExistante = compte.appreciationParcours2 || "";
+let corrigeNom = compte.corrigeParcours2Nom || "";
+
 let bloc = document.getElementById("detailCompte");
 
 bloc.innerHTML = `
@@ -318,14 +239,29 @@ bloc.innerHTML = `
 <table style="width:100%; border-collapse:collapse; margin-top:20px;">
 <tr>
 <th>Compte</th>
-<th>Parcours 2</th>
+<th>Note Parcours 2</th>
+<th>Appréciation</th>
+<th>Corrigé</th>
 </tr>
 
 <tr>
 <td>${compte.nom} ${compte.prenom}</td>
+
 <td>
 <input type="number" id="note" value="${noteExistante}" min="0" max="20">
 /20
+</td>
+
+<td>
+<textarea id="appreciation" rows="6" style="width:95%;">${appreciationExistante}</textarea>
+</td>
+
+<td>
+<input type="file" id="corrige">
+<br><br>
+<span id="nomCorrige">
+${corrigeNom ? "Fichier actuel : " + corrigeNom : "Aucun corrigé ajouté"}
+</span>
 </td>
 </tr>
 </table>
@@ -333,12 +269,10 @@ bloc.innerHTML = `
 <br><br>
 
 <button onclick="enregistrerNote(${index})">
-Enregistrer note
+Enregistrer
 </button>
 
-<button onclick="
-document.getElementById('detailCompte').style.display='none'
-">
+<button onclick="document.getElementById('detailCompte').style.display='none'">
 Fermer
 </button>
 `;
@@ -355,15 +289,25 @@ behavior: "smooth"
 function enregistrerNote(index){
 
 let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
+
 let note = document.getElementById("note").value;
+let appreciation = document.getElementById("appreciation").value;
+let fichier = document.getElementById("corrige").files[0];
 
 comptes[index].noteParcours2 = note;
+comptes[index].appreciationParcours2 = appreciation;
+
+if(fichier){
+comptes[index].corrigeParcours2Nom = fichier.name;
+}
 
 localStorage.setItem("comptes", JSON.stringify(comptes));
 
-alert("Note enregistrée.");
+alert("Note, appréciation et corrigé enregistrés.");
 
 afficherComptes();
+
+document.getElementById("detailCompte").style.display = "none";
 
 }
 
