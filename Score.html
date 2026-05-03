@@ -23,7 +23,7 @@ h1{
 }
 
 .card{
-  max-width:700px;
+  max-width:1000px;
   margin:40px auto;
   background:white;
   padding:30px;
@@ -82,6 +82,11 @@ tr:nth-child(even){
   font-size:20px;
   font-weight:bold;
 }
+
+.appreciation{
+  text-align:left;
+  white-space:pre-wrap;
+}
 </style>
 </head>
 
@@ -97,6 +102,8 @@ tr:nth-child(even){
       <tr>
         <th>Parcours attribué</th>
         <th>Note</th>
+        <th>Appréciation</th>
+        <th>Corrigé</th>
       </tr>
     </thead>
 
@@ -116,6 +123,7 @@ const scoreBody = document.getElementById("scoreBody");
 if (!utilisateurConnecte) {
   window.location.href = "index.html";
 } else {
+
   infoUtilisateur.textContent =
     utilisateurConnecte.prenom + " " + utilisateurConnecte.nom;
 
@@ -124,20 +132,36 @@ if (!utilisateurConnecte) {
   });
 
   if (!compte) {
+
     scoreBody.innerHTML = `
       <tr>
-        <td colspan="2" class="message">
+        <td colspan="4" class="message">
           Aucun compte trouvé.
         </td>
       </tr>
     `;
+
   } else {
-    scoreBody.innerHTML = `
-      <tr>
-        <td>Parcours 2</td>
-        <td>${compte.noteParcours2 ? compte.noteParcours2 + " /20" : "Non noté"}</td>
-      </tr>
-    `;
+
+    let html = "";
+
+    for (let p = 2; p <= 6; p++) {
+
+      let note = compte[`parcours${p}_note`];
+      let appreciation = compte[`parcours${p}_appreciation`];
+      let corrige = compte[`parcours${p}_corrigeNom`];
+
+      html += `
+        <tr>
+          <td>Parcours ${p}</td>
+          <td>${note ? note + " /20" : "Non noté"}</td>
+          <td class="appreciation">${appreciation ? appreciation : "Aucune appréciation"}</td>
+          <td>${corrige ? corrige : "Aucun corrigé"}</td>
+        </tr>
+      `;
+    }
+
+    scoreBody.innerHTML = html;
   }
 }
 </script>
