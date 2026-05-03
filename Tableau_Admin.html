@@ -16,10 +16,10 @@ button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;background
 button:hover{background:#0056b3;}
 .delete-btn{background:#dc3545;}
 .delete-btn:hover{background:#a71d2a;}
-#detailCompte{display:none;margin:30px auto;width:90%;background:white;padding:30px;border-radius:15px;box-shadow:0 0 10px rgba(0,0,0,.2);text-align:left;}
+#detailCompte{display:none;margin:30px auto;width:95%;background:white;padding:30px;border-radius:15px;box-shadow:0 0 10px rgba(0,0,0,.2);text-align:left;}
 #detailCompte h2{text-align:center;color:#007BFF;}
 .reponses{background:#eef5ff;padding:20px;margin-top:20px;border-radius:10px;}
-input, textarea{padding:8px;font-size:16px;}
+input,textarea{padding:8px;font-size:16px;}
 textarea{resize:vertical;}
 </style>
 </head>
@@ -117,7 +117,6 @@ comptes.splice(index,1);
 localStorage.setItem("comptes", JSON.stringify(comptes));
 
 document.getElementById("detailCompte").style.display = "none";
-
 afficherComptes();
 
 }
@@ -136,9 +135,27 @@ let html = `
 <p><strong>Âge :</strong> ${compte.age}</p>
 <p><strong>Email :</strong> ${compte.email}</p>
 <p><strong>Mot de passe :</strong> ${compte.password}</p>
-<p><strong>Note Parcours 2 :</strong> ${compte.noteParcours2 || "Aucune note"}/20</p>
-<p><strong>Appréciation :</strong> ${compte.appreciationParcours2 || "Aucune appréciation"}</p>
-<p><strong>Corrigé :</strong> ${compte.corrigeParcours2Nom || "Aucun corrigé ajouté"}</p>
+
+<div class="reponses">
+<h3>Notes, appréciations et corrigés</h3>
+`;
+
+for(let p = 2; p <= 6; p++){
+
+html += `
+<p>
+<strong>Parcours ${p} :</strong><br>
+Note : ${compte[`parcours${p}_note`] || "Aucune note"} /20<br>
+Appréciation : ${compte[`parcours${p}_appreciation`] || "Aucune appréciation"}<br>
+Corrigé : ${compte[`parcours${p}_corrigeNom`] || "Aucun corrigé"}
+</p>
+<hr>
+`;
+
+}
+
+html += `
+</div>
 
 <div class="reponses">
 <h3>Toutes les réponses enregistrées</h3>
@@ -226,50 +243,55 @@ function noterCompte(index){
 
 let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
 let compte = comptes[index];
-
-let noteExistante = compte.noteParcours2 || "";
-let appreciationExistante = compte.appreciationParcours2 || "";
-let corrigeNom = compte.corrigeParcours2Nom || "";
-
 let bloc = document.getElementById("detailCompte");
 
-bloc.innerHTML = `
-<h2>Notation Parcours 2</h2>
+let html = `
+<h2>Notation des Parcours 2 à 6</h2>
 
 <table style="width:100%; border-collapse:collapse; margin-top:20px;">
 <tr>
-<th>Compte</th>
-<th>Note Parcours 2</th>
+<th>Parcours</th>
+<th>Note /20</th>
 <th>Appréciation</th>
 <th>Corrigé</th>
 </tr>
+`;
 
+for(let p = 2; p <= 6; p++){
+
+let note = compte[`parcours${p}_note`] || "";
+let appreciation = compte[`parcours${p}_appreciation`] || "";
+let corrige = compte[`parcours${p}_corrigeNom`] || "";
+
+html += `
 <tr>
-<td>${compte.nom} ${compte.prenom}</td>
+<td>Parcours ${p}</td>
 
 <td>
-<input type="number" id="note" value="${noteExistante}" min="0" max="20">
-/20
+<input type="number" id="note${p}" value="${note}" min="0" max="20">
 </td>
 
 <td>
-<textarea id="appreciation" rows="6" style="width:95%;">${appreciationExistante}</textarea>
+<textarea id="appreciation${p}" rows="4" style="width:95%;">${appreciation}</textarea>
 </td>
 
 <td>
-<input type="file" id="corrige">
+<input type="file" id="corrige${p}">
 <br><br>
-<span id="nomCorrige">
-${corrigeNom ? "Fichier actuel : " + corrigeNom : "Aucun corrigé ajouté"}
-</span>
+<span>${corrige ? "Fichier actuel : " + corrige : "Aucun corrigé ajouté"}</span>
 </td>
 </tr>
+`;
+
+}
+
+html += `
 </table>
 
 <br><br>
 
 <button onclick="enregistrerNote(${index})">
-Enregistrer
+Enregistrer toutes les notes
 </button>
 
 <button onclick="document.getElementById('detailCompte').style.display='none'">
@@ -277,6 +299,7 @@ Fermer
 </button>
 `;
 
+bloc.innerHTML = html;
 bloc.style.display = "block";
 
 window.scrollTo({
@@ -290,20 +313,24 @@ function enregistrerNote(index){
 
 let comptes = JSON.parse(localStorage.getItem("comptes")) || [];
 
-let note = document.getElementById("note").value;
-let appreciation = document.getElementById("appreciation").value;
-let fichier = document.getElementById("corrige").files[0];
+for(let p = 2; p <= 6; p++){
 
-comptes[index].noteParcours2 = note;
-comptes[index].appreciationParcours2 = appreciation;
+let note = document.getElementById("note" + p).value;
+let appreciation = document.getElementById("appreciation" + p).value;
+let fichier = document.getElementById("corrige" + p).files[0];
+
+comptes[index][`parcours${p}_note`] = note;
+comptes[index][`parcours${p}_appreciation`] = appreciation;
 
 if(fichier){
-comptes[index].corrigeParcours2Nom = fichier.name;
+comptes[index][`parcours${p}_corrigeNom`] = fichier.name;
+}
+
 }
 
 localStorage.setItem("comptes", JSON.stringify(comptes));
 
-alert("Note, appréciation et corrigé enregistrés.");
+alert("Notes, appréciations et corrigés enregistrés.");
 
 afficherComptes();
 
